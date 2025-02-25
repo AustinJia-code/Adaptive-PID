@@ -7,6 +7,10 @@ from Nonlinear import NonlinearSystem2D
 # Create a visualization of the controllers
 class PIDVisualization:
     def __init__(self):
+        r = (204/255, 51/255, 0)
+        b = (0, 102/255, 255/255)
+        g = (51/255, 153/255, 51/255)
+
         plt.rcParams['toolbar'] = 'None'
         self.fig, self.ax = plt.subplots(figsize=(10, 8))
         self.fig.canvas.manager.set_window_title("Adaptive PID")
@@ -34,12 +38,12 @@ class PIDVisualization:
         self.adaptive_controller.setpoint = self.target_position.copy()
         
         # Create plot elements
-        self.standard_dot, = self.ax.plot([], [], 'ro', markersize=10, label='Standard')
-        self.adaptive_dot, = self.ax.plot([], [], 'bo', markersize=10, label='Adaptive')
-        self.target_dot, = self.ax.plot([], [], 'go', markersize=7, label='Target')
+        self.standard_dot, = self.ax.plot([], [], color=r, marker='o', markersize=10, label='Standard')
+        self.adaptive_dot, = self.ax.plot([], [], color=b, marker='o', markersize=10, label='Adaptive')
+        self.target_dot, = self.ax.plot([], [], color=g, marker='o', markersize=7, label='Target')
         
-        self.standard_path, = self.ax.plot([], [], 'r-', alpha=0.5)
-        self.adaptive_path, = self.ax.plot([], [], 'b-', alpha=0.5)
+        self.standard_path, = self.ax.plot([], [], '-', color = r, alpha=0.5)
+        self.adaptive_path, = self.ax.plot([], [], '-', color = b, alpha=0.5)
         
         self.standard_path_x = []
         self.standard_path_y = []
@@ -64,10 +68,10 @@ class PIDVisualization:
         # Parameter display
         self.param_text = self.ax.text(0.02, 0.98, '', transform=self.ax.transAxes,
                                       verticalalignment='top', fontsize=9, bbox=dict(facecolor='white', alpha=0.7))
-        
+
         # Add velocity vectors
-        self.standard_vel_arrow = self.ax.quiver(0, 0, 0, 0, color='r', scale=20)
-        self.adaptive_vel_arrow = self.ax.quiver(0, 0, 0, 0, color='b', scale=20)
+        self.standard_vel_arrow = self.ax.quiver(0, 0, 0, 0, color=r, scale=5)
+        self.adaptive_vel_arrow = self.ax.quiver(0, 0, 0, 0, color=b, scale=5)
         
         # Animation setup
         self.dt = 0.05

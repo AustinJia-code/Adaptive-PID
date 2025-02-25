@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.interpolate import RegularGridInterpolator
 
 class NonlinearSystem2D:
     def __init__(self, mass=1.0, base_friction=1):
