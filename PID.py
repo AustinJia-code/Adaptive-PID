@@ -79,14 +79,19 @@ class AdaptivePIDController(PIDController):
       else:
         rise_time_indicator = 0
           
-      # Tune proportional gain based on rise time
-      if rise_time_indicator < 0.1 and error_magnitude > 0.5:
-        # Slow response - increase Kp
-        self.kp *= 1.2
-      elif self.oscillation_count > 3:
-        # Too much oscillation - decrease Kp
-        self.kp *= 0.8
-        self.oscillation_count = 0
+      # Measure the peak overshoot in recent history
+      peak_error = max(self.error_history[-10:]) if len(self.error_history) > 10 else max(self.error_history)
+
+      # Determine how far the peak overshoot is beyond the setpoint
+      overshoot = peak_error - np.linalg.norm(self.setpoint)
+
+      # Tune proportional gain based on overshoot
+      if overshoot > 0.2:  
+        # Large overshoot - decrease Kp based on how excessive the overshoot is
+        self.kp *= max(0.7, 1 - overshoot)  # Reduce proportionally but not below 70%
+      elif error_magnitude > 0.5 and overshoot < 0.1:
+        # Slow response - increase Kp, but not if overshooting
+        self.kp *= 1.3
     
       # Tune integral gain based on steady-state error
       if np.std(recent_errors) < 0.1 and np.mean(recent_errors) > 0.1:
@@ -105,8 +110,8 @@ class AdaptivePIDController(PIDController):
         self.kd *= 0.9
       
       # Keep gains within reasonable limits
-      self.kp = np.clip(self.kp, 0.5, 8.0)
-      self.ki = np.clip(self.ki, 0.0, 3.0)
+      self.kp = np.clip(self.kp, 0.5, 30.0)
+      self.ki = np.clip(self.ki, 0.0, 5.0)
       self.kd = np.clip(self.kd, 0.1, 5.0)
   
     return control_signal

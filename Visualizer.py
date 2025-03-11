@@ -24,8 +24,8 @@ class PIDVisualization:
     # Make both systems use the same resistance map for fair comparison
     self.adaptive_system.resistance_map = self.standard_system.resistance_map.copy()
     
-    # Start with more aggressive PID values for the adaptive controller
-    self.standard_controller = PIDController(kp=2.0, ki=0.1, kd=1.0)
+    # Controller default tuning
+    self.standard_controller = PIDController(kp=30.0, ki=0.1, kd=5.0)
     self.adaptive_controller = AdaptivePIDController(kp=2.0, ki=0.1, kd=1.0)
     
     # Initialize positions and target
