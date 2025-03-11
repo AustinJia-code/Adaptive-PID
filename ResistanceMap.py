@@ -14,7 +14,7 @@ class ResistanceMap:
 
   def circular_resistance(self):
     min_intensity = self.base_friction
-    max_intensity = np.random.uniform(3.0, 5.0)  # Maximum resistance at the center
+    max_intensity = np.random.uniform(1.0, 5.0)  # Maximum resistance at the center
 
     center = np.array([self.grid_size / 2, self.grid_size / 2])  # Grid center
     max_distance = np.linalg.norm(center)  # Maximum possible distance to the edge
